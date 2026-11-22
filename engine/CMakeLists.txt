@@ -14,7 +14,7 @@ target_sources(sqlite3_ops
         FILE_SET CXX_MODULES
         TYPE CXX_MODULES
         FILES
-        dbinit.cppm
+        dbwrapper.cppm
 )
 
 # Executable consuming the module

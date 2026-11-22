@@ -1,9 +1,9 @@
 //
 // Created by nakamurasama072 on 11/22/26.
 //
-import dbinit;
+import dbwrapper;
 
 int main() {
-    test();
+    sqliteops::test();
     return 0;
 }
