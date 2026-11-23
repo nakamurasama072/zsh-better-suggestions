@@ -19,7 +19,7 @@ namespace sqliteops {
     export class DatabaseSession {
     public:
         // Constructor and destructor
-        explicit DatabaseSession(std::optional<fs::path>& db_path);
+        explicit DatabaseSession(const std::optional<fs::path>& db_path);
         ~DatabaseSession();
 
         // Disable copying while allow moving
@@ -33,7 +33,6 @@ namespace sqliteops {
 
         // Create empty or preconfigured database
         bool create_dummy();
-        uint8_t update_db_with_schema(fs::path& schema_path);
         uint8_t create_db(fs::path& db_path, fs::path& schema_path);
 
         // Connect and disconnect
@@ -42,6 +41,7 @@ namespace sqliteops {
 
         // Execute SQL statements (including insert, update, lookup and delete)
         uint8_t execute_sql(std::string_view sql_statement);
+        uint8_t execute_sql_schema(fs::path& schema_path);
 
         // Add more methods here...
     private:
