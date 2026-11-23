@@ -15,6 +15,8 @@ target_sources(sqlite3_ops
         TYPE CXX_MODULES
         FILES
         dbwrapper.cppm
+        PRIVATE
+        dbwrapper.cpp
 )
 
 # Executable consuming the module
