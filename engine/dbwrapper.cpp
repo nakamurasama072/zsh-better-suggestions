@@ -23,26 +23,21 @@ sqliteops::DatabaseSession::DatabaseSession(
     // no values (default), do nothing; otherwise validate and assign
     if (db_path.has_value()) {
         // Validate the path first
-        try {
-            if (!fs::exists(*db_path)) {
-                // file does not exist or has been moved elsewhere
-                throw fs::filesystem_error(
-                    "The database does not exist or has been permanently moved.",
-                    *db_path,
-                    std::make_error_code(std::errc::no_such_file_or_directory)
-                );
-            }
-            if (fs::is_directory(*db_path)) {
-                // the path is actually a directory
-                throw fs::filesystem_error(
-                    "The path you've specified is actually a directory.",
-                    *db_path,
-                    std::make_error_code(std::errc::is_a_directory)
-                );
-            }
-        } catch (fs::filesystem_error& ferror) {
-            std::cerr << ferror.what() << "\n";
-            std::cerr << "Database path validation failed with errors.\n";
+        if (!fs::exists(*db_path)) {
+            // file does not exist or has been moved elsewhere
+            throw fs::filesystem_error(
+                "The database does not exist or has been permanently moved.",
+                *db_path,
+                std::make_error_code(std::errc::no_such_file_or_directory)
+            );
+        }
+        if (fs::is_directory(*db_path)) {
+            // the path is actually a directory
+            throw fs::filesystem_error(
+                "The path you've specified is actually a directory.",
+                *db_path,
+                std::make_error_code(std::errc::is_a_directory)
+            );
         }
         db_pimpl->db_path = *db_path;
     }
