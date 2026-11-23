@@ -16,7 +16,7 @@ namespace sqliteops {
         std::cout << "This is a test function.\n";
     }
 
-    class DatabaseSession {
+    export class DatabaseSession {
     public:
         // Constructor and destructor
         explicit DatabaseSession(std::optional<fs::path>& db_path);
