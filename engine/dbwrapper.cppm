@@ -1,22 +1,52 @@
 // GMF
 module;
 #include <iostream>
-#include <string>
+#include <optional>
 #include <filesystem>
+#include <memory>
 #include <string_view>
-#include <sqlite3.h>
+#include <cstdint> // In case some compilers say "uint8_t was not declared"
 
 export module dbwrapper;
 
 namespace sqliteops {
+    namespace fs = std::filesystem;
+
     export void test() {
         std::cout << "This is a test function.\n";
     }
 
     class DatabaseSession {
     public:
+        // Constructor and destructor
+        explicit DatabaseSession(std::optional<fs::path>& db_path);
+        ~DatabaseSession();
 
+        // Disable copying while allow moving
+        // Disable copying
+        DatabaseSession(const DatabaseSession&) = delete;
+        DatabaseSession& operator=(const DatabaseSession&) = delete;
+
+        // Explicitly enable moving
+        DatabaseSession(DatabaseSession&&) = default;
+        DatabaseSession& operator=(DatabaseSession&&) = default;
+
+        // Create empty or preconfigured database
+        bool create_dummy();
+        uint8_t update_db_with_schema(fs::path& schema_path);
+        uint8_t create_db(fs::path& db_path, fs::path& schema_path);
+
+        // Connect and disconnect
+        bool connect();
+        bool disconnect();
+
+        // Execute SQL statements (including insert, update, lookup and delete)
+        uint8_t execute_sql(std::string_view sql_statement);
+
+        // Add more methods here...
     private:
-
+        // Apply Pimpl (Pointer to Implementation) idiom to hide attrs
+        struct DBImpl;
+        std::unique_ptr<DBImpl> db_pimpl;
     };
 }
