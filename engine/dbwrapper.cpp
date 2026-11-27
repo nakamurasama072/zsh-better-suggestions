@@ -74,20 +74,19 @@ void sqliteops::DatabaseSession::validate_db_path(const fs::path& dest_db_path) 
 
 // Create an empty database at designated path.
 // Return 0 if **operation successfully terminated without errors**.
-// Do note that the return value is a strict 8-bit unsigned integer.
+// Do note that the return value is a strict 16-bit unsigned integer.
 uint16_t sqliteops::DatabaseSession::create_dummy(const fs::path &dest_db_path) const {
     // Empty object, assign the value
-    if (db_pimpl->db_path.empty()) {
-        try {
-            validate_db_path(dest_db_path);
+    try {
+        validate_db_path(dest_db_path);
+        if (db_pimpl->db_path.empty())
             db_pimpl->db_path = dest_db_path;
-        } catch (fs::filesystem_error &fs_error) {
-            std::cerr << fs_error.what() << "\n";
-            if (fs_error.code() == std::errc::no_such_file_or_directory)
-                return SQLITE_CANTOPEN;
-            if (fs_error.code() == std::errc::is_a_directory)
-                return SQLITE_CANTOPEN_ISDIR;
-        }
+    } catch (fs::filesystem_error &fs_error) {
+        std::cerr << fs_error.what() << "\n";
+        if (fs_error.code() == std::errc::no_such_file_or_directory)
+            return SQLITE_CANTOPEN;
+        if (fs_error.code() == std::errc::is_a_directory)
+            return SQLITE_CANTOPEN_ISDIR;
     }
 
     sqlite3* db_file = nullptr;
