@@ -32,8 +32,8 @@ namespace sqliteops {
         DatabaseSession& operator=(DatabaseSession&&) = default;
 
         // Create empty or preconfigured database
-        bool create_dummy(const fs::path& dest_db_path);
-        uint8_t create_db(const fs::path& dest_db_path, const fs::path& schema_path);
+        [[nodiscard]] uint16_t create_dummy(const fs::path& dest_db_path) const;
+        [[nodiscard]] uint16_t create_db(const fs::path& dest_db_path, const fs::path& schema_path);
 
         // Connect and disconnect
         bool connect(uint8_t sqlite_open_flag);
@@ -48,5 +48,8 @@ namespace sqliteops {
         // Apply Pimpl (Pointer to Implementation) idiom to hide attrs
         struct DBImpl;
         std::unique_ptr<DBImpl> db_pimpl;
+
+        // Validate file
+        static void validate_db_path(const fs::path& dest_db_path);
     };
 }
